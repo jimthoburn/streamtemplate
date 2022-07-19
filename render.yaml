@@ -1,10 +1,10 @@
-# Change “myappname” throughout this file, to the name of your application.
+# Change “streamtemplate” throughout this file, to the name of your application.
 services:
 - type: web
-  name: myappname-wordpress
+  name: streamtemplate-wordpress
   env: docker
-  plan: standard
-  region: oregon
+  plan: starter
+  region: singapore
   autoDeploy: false
   dockerfilePath: ./wordpress/Dockerfile
   dockerContext: ./wordpress
@@ -12,26 +12,26 @@ services:
     name: wordpress
     mountPath: /var/www/html
     # Pick a size for your disk. You can increase this size manually over time.
-    sizeGB: 20
+    sizeGB: 15
   envVars:
   - key: WORDPRESS_DB_HOST
     fromService:
-      name: myappname-mysql
+      name: streamtemplate-mysql
       type: pserv
       property: host
   - key: WORDPRESS_DB_NAME
     fromService:
-      name: myappname-mysql
+      name: streamtemplate-mysql
       type: pserv
       envVarKey: MYSQL_DATABASE
   - key: WORDPRESS_DB_USER
     fromService:
-      name: myappname-mysql
+      name: streamtemplate-mysql
       type: pserv
       envVarKey: MYSQL_USER
   - key: WORDPRESS_DB_PASSWORD
     fromService:
-      name: myappname-mysql
+      name: streamtemplate-mysql
       type: pserv
       envVarKey: MYSQL_PASSWORD
   # Manually define the port to serve traffic from, to work around an issue
@@ -40,10 +40,10 @@ services:
   - key: PORT
     value: 80
 - type: pserv
-  name: myappname-mysql
+  name: streamtemplate-mysql
   env: docker
-  plan: standard
-  region: oregon
+  plan: starter
+  region: singapore
   autoDeploy: false
   dockerfilePath: ./mysql/Dockerfile
   dockerContext: ./mysql
@@ -51,32 +51,32 @@ services:
     name: mysql
     mountPath: /var/lib/mysql
     # Pick a size for your disk. You can increase this size manually over time.
-    sizeGB: 10
+    sizeGB: 5
   envVars:
   - key: MYSQL_DATABASE
-    value: myappname
+    value: streamtemplate
   - key: MYSQL_USER
-    value: myappname_user
+    value: streamtemplate_user
   - key: MYSQL_PASSWORD
     generateValue: true
   - key: MYSQL_ROOT_PASSWORD
     generateValue: true
 - type: cron
-  name: myappname-mysql-backup
+  name: streamtemplate-mysql-backup
   env: docker
-  plan: standard
-  region: oregon
+  plan: starter
+  region: singapore
   autoDeploy: false
   dockerfilePath: ./backups/Dockerfile
   dockerContext: ./backups
   schedule: "0 3 * * *"
   envVars:
   # Pick the region closest to your database.
-  # For example, `us-west-2` for the `oregon` region
+  # For example, `us-west-2` for the `singapore` region
   - key: AWS_REGION
     sync: false
   # Pick a globally unique name for your bucket.
-  # For example, <my-amazon-username>-myappname-render-mysql-backups
+  # For example, <my-amazon-username>-streamtemplate-render-mysql-backups
   - key: S3_BUCKET_NAME
     sync: false
   # Looks like "AKIAXXXXXXXXXXXXXXXX"
@@ -86,21 +86,21 @@ services:
     sync: false
   - key: MYSQL_HOST
     fromService:
-      name: myappname-mysql
+      name: streamtemplate-mysql
       type: pserv
       property: host
   - key: MYSQL_DATABASE
     fromService:
-      name: myappname-mysql
+      name: streamtemplate-mysql
       type: pserv
       envVarKey: MYSQL_DATABASE
   - key: MYSQL_USER
     fromService:
-      name: myappname-mysql
+      name: streamtemplate-mysql
       type: pserv
       envVarKey: MYSQL_USER
   - key: MYSQL_PASSWORD
     fromService:
-      name: myappname-mysql
+      name: streamtemplate-mysql
       type: pserv
       envVarKey: MYSQL_PASSWORD
